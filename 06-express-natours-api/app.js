@@ -1,11 +1,20 @@
 const express = require('express');
 const fs = require('fs');
+const morgan = require('morgan');
 const PORT = 3000;
 
 const app = express();
-
+app.use(morgan('dev'));
 app.use(express.json());
+app.use((req, res, next) => {
+  console.log('Hello from middleware');
+  next();
+});
 
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
@@ -13,6 +22,7 @@ const tours = JSON.parse(
 const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
+    requestedAt: req.requestTime,
     results: tours.length,
     data: tours,
   });
@@ -80,13 +90,52 @@ const createTour = (req, res) => {
   );
 };
 
-app.route('/api/v1/tours').get(getAllTours).post(createTour);
+const getAllUsers = (req, res) => {
+  res.status(500).json({
+    status: 'fail',
+    data: 'Not available',
+  });
+};
 
-app
-  .route('/api/v1/tours/:id')
-  .get(getTour)
-  .patch(updateTour)
-  .delete(deleteTour);
+const createUser = (req, res) => {
+  res.status(500).json({
+    status: 'fail',
+    data: 'Not available',
+  });
+};
+
+const getUser = (req, res) => {
+  res.status(500).json({
+    status: 'fail',
+    data: 'Not available',
+  });
+};
+
+const updateUser = (req, res) => {
+  res.status(500).json({
+    status: 'fail',
+    data: 'Not available',
+  });
+};
+
+const deleteUser = (req, res) => {
+  res.status(500).json({
+    status: 'fail',
+    data: 'Not available',
+  });
+};
+
+const toursRouter = express.Router();
+const usersRouter = express.Router();
+
+toursRouter.route('/').get(getAllTours).post(createTour);
+toursRouter.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
+
+usersRouter.route('/').get(getAllUsers).post(createUser);
+usersRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
+
+app.use('/api/v1/tours', toursRouter);
+app.use('/api/v1/users', usersRouter);
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
