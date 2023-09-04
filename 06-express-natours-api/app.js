@@ -49,6 +49,20 @@ app.patch('/api/v1/tours/:id', (req, res) => {
   });
 });
 
+app.delete('/api/v1/tours/:id', (req, res) => {
+  const { id } = req.params;
+
+  const tour = tours.find((x) => x.id === +id);
+  if (!tour) {
+    return res.status(404).json({
+      status: 'fail',
+    });
+  }
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
 app.post('/api/v1/tours', (req, res) => {
   const newId = tours[tours.length - 1].id + 1;
   const newTour = Object.assign({ id: newId }, req.body);
