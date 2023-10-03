@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
+const factory = require("./handleFactory");
 
 const filterObj = (obj, ...allowedFields) =>
   {
@@ -10,12 +11,7 @@ const filterObj = (obj, ...allowedFields) =>
   })
   return newObj;
   }
-exports.getAllUsers = (req, res) => {
-  res.status(500).json({
-    status: 'fail',
-    data: 'Not available',
-  });
-};
+
 
 exports.createUser = (req, res) => {
   res.status(500).json({
@@ -24,26 +20,12 @@ exports.createUser = (req, res) => {
   });
 };
 
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: 'fail',
-    data: 'Not available',
-  });
-};
 
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status: 'fail',
-    data: 'Not available',
-  });
-};
+exports.getUser = factory.getOne(User);
+exports.getAllUsers = factory.getAll(User);
 
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'fail',
-    data: 'Not available',
-  });
-};
+exports.updateUser = factory.updateOne(User)
+exports.deleteUser = factory.deleteOne(User)
 
 exports.updateMe = catchAsync( async(req, res) => {
   
