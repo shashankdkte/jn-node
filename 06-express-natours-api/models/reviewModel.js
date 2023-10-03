@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const reviewSchem = new mongoose.Schema({
+const reviewSchema = new mongoose.Schema({
   review: {
     type: String,
     required:[true,'Review cannot be empty']
@@ -30,3 +30,7 @@ const reviewSchem = new mongoose.Schema({
     toObject: { virtuals: true }
   }
 )
+
+
+const Review = mongoose.model('Review', reviewSchema)
+module.exports = Review;
